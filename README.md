@@ -8,20 +8,16 @@ Usage
 - Step 1. Add the JitPack repository to your build file
 
 allprojects {
-repositories {
-...
-maven { url "https://jitpack.io" }
-}
+    repositories {
+    ...
+    maven { url "https://jitpack.io" }
+    }
 }
 - Step 2. Add the dependency
 
 dependencies {
-compile 'com.github.Victor2018:KHttpLib:latestVersion'
+    implementation 'com.github.Victor2018:NRouter:latestVersion'
 }
-
-- Step 3. Add google pay lib in build.gradle of app and sync project
-  //fastjson库
-  implementation 'com.alibaba:fastjson:1.1.56.android'
 
 ## v1.1.0-developing
 - 1，支持有参路由
