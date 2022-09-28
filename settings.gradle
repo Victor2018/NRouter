@@ -15,3 +15,9 @@ dependencyResolutionManagement {
 rootProject.name = "NRouter"
 include ':app'
 include ':neuro_router_core'
+include ':module_me'
+include ':module_login'
+include ':module_home'
+include ':module_message'
+include ':lib_common'
+include ':module_live'

@@ -7,6 +7,17 @@
         <entry key="..\:/AndroidProjects/NRouter/app/src/main/res/layout/activity_main.xml" value="0.2971014492753623" />
         <entry key="..\:/AndroidProjects/NRouter/app/src/main/res/layout/activity_message.xml" value="0.2971014492753623" />
         <entry key="..\:/AndroidProjects/NRouter/app/src/main/res/layout/activity_promo.xml" value="0.2971014492753623" />
+        <entry key="..\:/victor/github/NRouter/app/src/main/res/layout/activity_main.xml" value="0.2971014492753623" />
+        <entry key="..\:/victor/github/NRouter/app/src/main/res/layout/activity_promo.xml" value="0.2971014492753623" />
+        <entry key="..\:/victor/github/NRouter/module_home/src/main/res/layout/activity_home.xml" value="0.22708333333333333" />
+        <entry key="..\:/victor/github/NRouter/module_live/src/main/res/layout/activity_live.xml" value="0.26979166666666665" />
+        <entry key="..\:/victor/github/NRouter/module_login/src/main/res/layout/activity_home.xml" value="0.2971014492753623" />
+        <entry key="..\:/victor/github/NRouter/module_login/src/main/res/layout/activity_live.xml" value="0.196875" />
+        <entry key="..\:/victor/github/NRouter/module_login/src/main/res/layout/activity_login.xml" value="0.2971014492753623" />
+        <entry key="..\:/victor/github/NRouter/module_me/src/main/res/layout/activity_home.xml" value="0.2765625" />
+        <entry key="..\:/victor/github/NRouter/module_me/src/main/res/layout/activity_login.xml" value="0.2971014492753623" />
+        <entry key="..\:/victor/github/NRouter/module_me/src/main/res/layout/activity_me.xml" value="0.2971014492753623" />
+        <entry key="..\:/victor/github/NRouter/module_me/src/main/res/layout/activity_message.xml" value="0.2765625" />
       </map>
     </option>
   </component>

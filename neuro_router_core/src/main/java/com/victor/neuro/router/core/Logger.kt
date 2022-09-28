@@ -16,11 +16,11 @@ import android.util.Log
 interface Logger {
 
     fun onRoutingUrl(url: String) {
-        Log.i(Neuro.TAG, "Routing url $url")
+        Log.e(Neuro.TAG, "Routing url $url")
     }
 
     fun onUrlHasResult(url: String, nucleus: Nucleus, branch: AxonBranch?) {
-        Log.i(Neuro.TAG, "Routing via $nucleus and $branch")
+        Log.e(Neuro.TAG, "Routing via $nucleus and $branch")
     }
 
     fun onUrlHasNoResult(url: String) {
@@ -28,7 +28,7 @@ interface Logger {
     }
 
     fun onNucleusReturnedFalse(url: String) {
-        Log.i(Neuro.TAG, "Nucleus transporter returned false")
+        Log.e(Neuro.TAG, "Nucleus transporter returned false")
     }
 
     fun onFindRouteStarted(url: String) = Unit

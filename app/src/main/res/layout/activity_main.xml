@@ -7,14 +7,54 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/mBtnProceed"
+        android:id="@+id/mBtnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Proceed"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:text="登录"
         app:layout_constraintTop_toTopOf="parent"
-        android:textAllCaps="false"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mBtnHome"/>
+
+    <Button
+        android:id="@+id/mBtnHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="首页"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mBtnLogin"
+        app:layout_constraintEnd_toStartOf="@+id/mBtnMessage"/>
+
+    <Button
+        android:id="@+id/mBtnMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="消息"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mBtnHome"
+        app:layout_constraintEnd_toStartOf="@+id/mBtnMe"/>
+
+    <Button
+        android:id="@+id/mBtnMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我的"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mBtnMessage"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/mBtnLive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开始直播"
+        app:layout_constraintTop_toBottomOf="@+id/mBtnMe"
+        app:layout_constraintStart_toEndOf="@+id/mBtnMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

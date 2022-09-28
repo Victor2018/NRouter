@@ -1,6 +1,7 @@
 package com.victor.neuro.router.core
 
 import android.net.Uri
+import com.victor.neuro.router.core.data.Chosen
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
 
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentSkipListSet
 typealias SignalAction = (Signal) -> Unit
 typealias AxonPreprocessor = (AxonProcessor, SignalAction, Signal) -> Unit
 typealias AxonProcessor = (SignalAction, Signal) -> Unit
-typealias RouteDecision = Triple<Nucleus.Chosen, AxonBranch?, Uri>
+typealias RouteDecision = Triple<Chosen, AxonBranch?, Uri>
 typealias AxonTerminal = ConcurrentSkipListMap<Int, ConcurrentSkipListSet<AxonBranch>>
 
 const val COMMON_PATTERN = """[^/]+"""

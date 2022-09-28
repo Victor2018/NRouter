@@ -1,5 +1,6 @@
 package com.victor.neuro.router.core
 
+import com.victor.neuro.router.core.data.Chosen
 import java.util.*
 
 /*
@@ -120,13 +121,6 @@ sealed class Nucleus(val id: String) : Comparable<Nucleus> {
 
     open val priority: Int = DEFAULT_PRIORITY
 
-    class Chosen(
-        val nucleus: Nucleus,
-        val scheme: String?,
-        val host: String?,
-        val port: Int?
-    )
-
     final override fun toString(): String = id
 
     final override fun equals(other: Any?): Boolean {
@@ -139,56 +133,5 @@ sealed class Nucleus(val id: String) : Comparable<Nucleus> {
 
     companion object {
         const val DEFAULT_PRIORITY = 100
-    }
-}
-
-abstract class Soma(id: String) : Nucleus(id) {
-
-    internal val noBranchAction: AxonBranch by lazy {
-        AxonBranch(EXPRESSION_NO_BRANCH) {
-            onProcessNoBranch(it)
-        }
-    }
-    internal val noBranchWithSlashAction: AxonBranch by lazy {
-        AxonBranch(EXPRESSION_NO_BRANCH_WITH_SLASH) {
-            onProcessNoBranch(it)
-        }
-    }
-    internal val otherBranchAction: AxonBranch by lazy {
-        AxonBranch(EXPRESSION_OTHER_BRANCH) {
-            onProcessOtherBranch(it)
-        }
-    }
-
-    // do return false if you want to forward action to AxonBranch
-    open fun onSomaProcess(signal: Signal): Boolean = false
-
-    // onSomaProcess must return false to be processed here
-    open fun onProcessNoBranch(signal: Signal) = Unit
-
-    // onSomaProcess must return false to be processed here
-    open fun onProcessOtherBranch(signal: Signal) = Unit
-
-    companion object {
-        const val EXPRESSION_NO_BRANCH = ""
-        const val EXPRESSION_NO_BRANCH_WITH_SLASH = "/"
-        const val EXPRESSION_OTHER_BRANCH = "/<path:.+>"
-    }
-}
-
-abstract class SomaOnly(id: String) : Nucleus(id) {
-
-    abstract fun onSomaProcess(signal: Signal)
-}
-
-abstract class SomaFallback : SomaOnly(ID) {
-
-    final override val schemes = super.schemes
-    final override val hosts = super.hosts
-    final override val ports = super.ports
-    final override val priority: Int = Int.MAX_VALUE
-
-    companion object {
-        const val ID = "*"
     }
 }

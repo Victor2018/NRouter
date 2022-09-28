@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import com.victor.neuro.router.core.data.Chosen
 import com.victor.neuro.router.core.data.OptWave
 import com.victor.neuro.router.core.data.OptWaves
 import java.util.*
@@ -245,7 +246,7 @@ class Neuro {
     private fun String.adaptWithLiteral() = """\E$this\Q"""
 
     private fun extractSignal(
-        chosenNucleus: Nucleus.Chosen,
+        chosenNucleus: Chosen,
         context: Context?,
         branch: AxonBranch?,
         uri: Uri,
