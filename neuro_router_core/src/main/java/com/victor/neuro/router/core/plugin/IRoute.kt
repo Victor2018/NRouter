@@ -1,8 +1,5 @@
 package com.victor.neuro.router.core.plugin
 
-import android.app.Application
-import android.content.Context
-
 /*
  * -----------------------------------------------------------------
  * Copyright (C) 2018-2028, by Victor, All rights reserved.

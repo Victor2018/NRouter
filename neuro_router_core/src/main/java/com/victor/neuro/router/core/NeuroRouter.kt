@@ -98,6 +98,16 @@ class NeuroRouter {
         neuro.proceed(url, context)
     }
 
+    fun getNavigation (routePath: String): Any? {
+        var routeUrl = routePath
+        if (!routeUrl.startsWith(PluginConfig.ROUTE_BASE_URI)) {
+            routeUrl = "${PluginConfig.ROUTE_BASE_URI}$routePath"
+        }
+        var navigationCls = Dendrite.instance.getNavigation(routeUrl)
+
+        return navigationCls?.newInstance()
+    }
+
     fun clearPaths() {
         neuro.clearConnection()
     }
