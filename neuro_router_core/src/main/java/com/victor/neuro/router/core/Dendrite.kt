@@ -19,7 +19,8 @@ import java.lang.Exception
 class Dendrite {
     private val TAG = "Dendrite"
 
-    var routes = HashMap<String,Class<*>>()
+    var routes = HashMap<String,Class<*>?>()
+    var signals = HashMap<String,Signal?>()
 
     private object Holder {
         val instance = Dendrite()
@@ -29,12 +30,20 @@ class Dendrite {
         val instance: Dendrite by lazy { Holder.instance }
     }
 
-    fun registerRoute(routePath: String,clazz: Class<*>) {
+    fun registerRoute(routePath: String,clazz: Class<*>?) {
         routes[routePath] = clazz
+    }
+
+    fun registerSignal(routePath: String,signal: Signal?) {
+        signals[routePath] = signal
     }
 
     fun getNavigation (routePath: String): Class<*>? {
         return routes[routePath]
+    }
+
+    fun getSignal (routePath: String): Signal? {
+        return signals[routePath]
     }
 
     fun navigation (context: Context?, clazz: Class<*>?) {

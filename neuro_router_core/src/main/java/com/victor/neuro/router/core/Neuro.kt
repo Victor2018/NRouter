@@ -97,26 +97,29 @@ class Neuro {
 
     @JvmOverloads
     fun proceed(
+        routeType: Int,
         url: String,
         decision: RouteDecision?,
         context: Context? = null,
         axonProcessor: AxonProcessor? = null,
         args: Bundle = Bundle()
     ) {
-        proceedInternal(url, decision, context, axonProcessor, args)
+        proceedInternal(routeType,url, decision, context, axonProcessor, args)
     }
 
     @JvmOverloads
     fun proceed(
+        routeType: Int,
         url: String,
         context: Context? = null,
         axonProcessor: AxonProcessor? = null,
         args: Bundle = Bundle()
     ) {
-        proceedInternal(url, findRoute(url), context, axonProcessor, args)
+        proceedInternal(routeType,url,findRoute(url), context, axonProcessor, args)
     }
 
     private fun proceedInternal(
+        routeType: Int,
         url: String,
         decision: RouteDecision?,
         context: Context? = null,
@@ -137,7 +140,7 @@ class Neuro {
         val branch = decision.second
         val uri = decision.third
 
-        val signal = extractSignal(chosenNucleus, context, branch, uri, args) ?: return
+        val signal = extractSignal(chosenNucleus, context, branch, uri, args,routeType) ?: return
 
         when (nucleus) {
             is Soma -> {
@@ -163,11 +166,13 @@ class Neuro {
             _action.invoke(_signal)
         }
 
-        usedAxonPreprocessor.invoke(
-            usedAxonProcessor,
-            branch.action,
-            signal
-        )
+        branch.action?.let {
+            usedAxonPreprocessor.invoke(
+                usedAxonProcessor,
+                it,
+                signal
+            )
+        }
     }
 
     fun findRoute(url: String): RouteDecision? {
@@ -250,7 +255,8 @@ class Neuro {
         context: Context?,
         branch: AxonBranch?,
         uri: Uri,
-        args: Bundle
+        args: Bundle,
+        routeType: Int
     ): Signal? {
 
         // build the final expression, if null, means that its optional, might be written or not
@@ -304,7 +310,7 @@ class Neuro {
             }
         }
 
-        return Signal(context, uri, uri.toString(), variables, queries, fragment, args)
+        return Signal(context,routeType, uri, uri.toString(), variables, queries, fragment, args)
     }
 
     fun clearConnection() {

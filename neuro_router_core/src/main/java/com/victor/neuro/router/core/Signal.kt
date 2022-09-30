@@ -19,6 +19,7 @@ import com.victor.neuro.router.core.data.OptWaves
 
 open class Signal(
     val context: Context?,
+    var routeType: Int,
     val uri: Uri,
     val url: String,
     val variables: OptWave,

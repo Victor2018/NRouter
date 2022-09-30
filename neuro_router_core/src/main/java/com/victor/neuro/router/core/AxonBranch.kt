@@ -15,19 +15,19 @@ class AxonBranch private constructor(
     private val id: String?,
     private val priority: Int,
     val expression: String,
-    val action: SignalAction
+    val action: SignalAction?
 ) : Comparable<AxonBranch> {
 
     constructor(
         expression: String,
-        action: SignalAction
+        action: SignalAction?
     ) : this(null, DEFAULT_PRIORITY, expression, action)
 
     constructor(
         id: String,
         expression: String,
         priority: Int = DEFAULT_PRIORITY,
-        action: SignalAction
+        action: SignalAction?
     ) : this(id, priority, expression, action)
 
     private val comparedPattern: String by lazy {

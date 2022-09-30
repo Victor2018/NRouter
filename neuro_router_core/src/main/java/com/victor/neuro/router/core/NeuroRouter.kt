@@ -95,7 +95,11 @@ class NeuroRouter {
     }
 
     fun navigation(url: String, context: Context? = null) {
-        neuro.proceed(url, context)
+        var routeUrl = url
+        if (!routeUrl.startsWith(PluginConfig.ROUTE_BASE_URI)) {
+            routeUrl = "${PluginConfig.ROUTE_BASE_URI}$url"
+        }
+        neuro.proceed(0,routeUrl, context)
     }
 
     fun getNavigation (routePath: String): Any? {
