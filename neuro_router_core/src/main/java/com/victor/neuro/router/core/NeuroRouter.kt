@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.text.TextUtils
 import android.util.Log
 import com.victor.neuro.router.core.plugin.PluginConfig
 import com.victor.neuro.router.core.plugin.PluginCore
@@ -100,6 +101,14 @@ class NeuroRouter {
             routeUrl = "${PluginConfig.ROUTE_BASE_URI}$url"
         }
         neuro.proceed(0,routeUrl, context)
+    }
+
+    fun navigation(url: String,queries: String?, context: Context? = null) {
+        var routeUrl = url
+        if (!TextUtils.isEmpty(queries)) {
+            routeUrl = "$url?data=$queries"
+        }
+        navigation(routeUrl, context)
     }
 
     fun getNavigation (routePath: String): Any? {
