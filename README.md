@@ -6,14 +6,18 @@
 Usage
 
 - Step 1. Add the JitPack repository to your build file
-
+‘’‘
 allprojects {
     repositories {
     ...
     maven { url "https://jitpack.io" }
     }
 }
+’‘’
 - Step 2. Add the dependency
+  dependencies {
+    implementation 'com.github.Victor2018:NRouter:latestVersion'
+  }
 
 - Step 3
   init sdk in application for this:
@@ -40,10 +44,6 @@ receive queries for this:
     var json = JSONObject(data)
     var userName = json.optString("user_name")
     var password = json.optString("password")
-
-dependencies {
-    implementation 'com.github.Victor2018:NRouter:latestVersion'
-}
 
 ## 2023/01/11-v2.0.0
 - 1，支持有参路由
