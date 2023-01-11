@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.mBtnLogin -> {
-                val routeUrl = "cherry://com.cherry.router/login_act"
+                val routeUrl = "cherry://com.cherry.router/login_act?data={\"user_name\":\"victor\",\"password\": \"423099\"}"
                 NeuroRouter.instance.navigation(routeUrl, this)
             }
             R.id.mBtnHome -> {
