@@ -15,11 +15,37 @@ allprojects {
 }
 - Step 2. Add the dependency
 
+- Step 3
+  init sdk in application for this:
+  NeuroRouter.instance.init(this)
+  
+- Step 4
+  create Route  at package com.victor.module.route for this:
+
+class LoginRoute : IRoute {
+    override fun register() {
+        NeuroRouter.instance.registerRoute("/login_act", LoginActivity::class.java)
+    }
+}
+
+- Step 5
+  navigation url for this:
+  
+  val routeUrl = "cherry://com.cherry.router/login_act?data={\"user_name\":\"victor\",\"password\": \"423099\"}"
+  NeuroRouter.instance.navigation(routeUrl, this)
+  
+- Step 6
+receive queries for this:
+    var data = intent.getStringExtra(Constant.SCHEMA_QUERIES_KEY)
+    var json = JSONObject(data)
+    var userName = json.optString("user_name")
+    var password = json.optString("password")
+
 dependencies {
     implementation 'com.github.Victor2018:NRouter:latestVersion'
 }
 
-## v1.1.0-developing
+## 2023/01/11-v2.0.0
 - 1，支持有参路由
 
 ## 2022/09/28-v1.0.0
