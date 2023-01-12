@@ -2,7 +2,6 @@
 神经网络路由-你的组件化从这里开始
 - ![image](https://s2.loli.net/2022/09/28/5wABJtvS1QDWxZi.jpg)
 
-
 Usage
 
 - Step 1. Add the JitPack repository to your build file
@@ -43,8 +42,9 @@ Usage
   navigation url for this:
 
     ```
-      val routeUrl = "cherry://com.cherry.router/login_act?data={\"user_name\":\"victor\",\"password\": \"423099\"}"
-      NeuroRouter.instance.navigation(routeUrl, this)
+    val routeUrl = "cherry://com.cherry.router/login_act"
+    var data = "{\"user_name\":\"victor\",\"password\": \"423099\"}"
+    NeuroRouter.instance.navigation(routeUrl, data,this)
     ```
 - Step 6
 receive queries for this:
