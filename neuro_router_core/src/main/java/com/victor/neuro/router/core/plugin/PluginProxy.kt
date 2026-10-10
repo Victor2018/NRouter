@@ -21,6 +21,8 @@ object PluginProxy {
 
     /**
      * 初始化注册的插件
+     * 通过 DexFile 扫描 com.victor.module.route 包下的 IRoute 实现
+     * 注解处理器生成的 IRoute 实现类也在此包路径下，会被一并扫描到
      *
      * @param context
      * @param packageName

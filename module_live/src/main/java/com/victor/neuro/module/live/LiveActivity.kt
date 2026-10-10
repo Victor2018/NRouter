@@ -3,6 +3,7 @@ package com.victor.neuro.module.live
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.victor.neuro.module.live.databinding.ActivityLiveBinding
+import com.victor.neuro.router.annotation.Route
 
 /*
  * -----------------------------------------------------------------
@@ -15,6 +16,7 @@ import com.victor.neuro.module.live.databinding.ActivityLiveBinding
  * -----------------------------------------------------------------
  */
 
+@Route(path = "/live_act")
 class LiveActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLiveBinding

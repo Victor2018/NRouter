@@ -30,8 +30,10 @@ class PluginCore {
      * @param application
      */
     fun init(application: Application) {
-        //扫描插件映射缓存起来
+        //扫描手动注册的路由插件
         PluginProxy.initPlugins(application, PluginConfig.PLUGIN_PACKAGE)
+        //扫描注解处理器生成的路由类
+        PluginProxy.initPlugins(application, PluginConfig.GENERATED_PACKAGE)
         this.application = application
     }
 

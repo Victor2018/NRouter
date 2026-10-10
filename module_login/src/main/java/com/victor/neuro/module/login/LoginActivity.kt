@@ -3,6 +3,7 @@ package com.victor.neuro.module.login
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.victor.neuro.module.login.databinding.ActivityLoginBinding
+import com.victor.neuro.router.annotation.Route
 import com.victor.neuro.router.core.util.Constant
 import org.json.JSONObject
 
@@ -17,6 +18,7 @@ import org.json.JSONObject
  * -----------------------------------------------------------------
  */
 
+@Route(path = "/login_act")
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding

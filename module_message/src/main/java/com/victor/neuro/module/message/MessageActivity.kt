@@ -3,6 +3,7 @@ package com.victor.neuro.module.message
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.victor.neuro.module.message.databinding.ActivityMessageBinding
+import com.victor.neuro.router.annotation.Route
 
 /*
  * -----------------------------------------------------------------
@@ -15,6 +16,7 @@ import com.victor.neuro.module.message.databinding.ActivityMessageBinding
  * -----------------------------------------------------------------
  */
 
+@Route(path = "/message_act")
 class MessageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMessageBinding

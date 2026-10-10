@@ -3,6 +3,7 @@ package com.victor.neuro.module.home
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.victor.neuro.module.home.databinding.ActivityHomeBinding
+import com.victor.neuro.router.annotation.Route
 
 /*
  * -----------------------------------------------------------------
@@ -15,6 +16,7 @@ import com.victor.neuro.module.home.databinding.ActivityHomeBinding
  * -----------------------------------------------------------------
  */
 
+@Route(path = "/home_act")
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding

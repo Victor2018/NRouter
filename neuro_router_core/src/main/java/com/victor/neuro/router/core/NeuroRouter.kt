@@ -29,6 +29,7 @@ class NeuroRouter {
     }
 
     companion object {
+        @JvmStatic
         val instance: NeuroRouter by lazy { Holder.instance }
     }
 
