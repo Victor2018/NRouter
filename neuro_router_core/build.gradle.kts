@@ -52,7 +52,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 from(components["release"])
                 groupId = "com.github.Victor2018"
-                artifactId = "neuro-router-core"
+                artifactId = "neuro_router_core"
                 version = "1.0.0"
             }
         }
