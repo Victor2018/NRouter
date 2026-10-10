@@ -161,7 +161,8 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.Victor2018:NRouter:latestVersion'
+    implementation 'com.github.Victor2018.NRouter:neuro_router_core:latestVersion'
+    kapt 'com.github.Victor2018.NRouter:neuro_router_compiler:latestVersion'
 }
 ```
 

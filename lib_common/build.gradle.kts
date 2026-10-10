@@ -44,4 +44,6 @@ dependencies {
 
     api(project(":neuro_router_core"))
     kapt(project(":neuro_router_compiler"))
+//    api(libs.nrouter.core)
+//    kapt(libs.nrouter.compiler)
 }

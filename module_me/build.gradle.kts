@@ -47,4 +47,6 @@ dependencies {
 
     api(project(":lib_common"))
     kapt(project(":neuro_router_compiler"))
+//    kapt(libs.nrouter.compiler)
+
 }
