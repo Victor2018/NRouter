@@ -300,9 +300,9 @@ NRouter/
 
 ## 📝 技术栈
 
-- **开发语言**：Kotlin
-- **构建工具**：Android Gradle Plugin 7.1.3
-- **最低支持版本**：API 21+
+- **开发语言**：Kotlin 1.9.0
+- **构建工具**：Android Gradle Plugin 8.5.0
+- **最低支持版本**：API 24+
 - **依赖管理**：JitPack
 
 ## 🔗 最佳实践
