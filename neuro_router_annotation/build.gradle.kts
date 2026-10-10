@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    id("maven-publish")
 }
 
 java {
@@ -10,4 +11,17 @@ java {
 
 kotlin {
     jvmToolchain(8)
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["java"])
+                groupId = "com.github.Victor2018"
+                artifactId = "neuro_router_annotation"
+                version = "1.0.0"
+            }
+        }
+    }
 }
