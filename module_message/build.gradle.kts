@@ -46,7 +46,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     api(project(":lib_common"))
-//    kapt(project(":neuro_router_compiler"))
-
-    kapt("com.github.Victor2018:NRouter:neuro_router_compiler:v2.2.0")
+    kapt(project(":neuro_router_compiler"))
 }
