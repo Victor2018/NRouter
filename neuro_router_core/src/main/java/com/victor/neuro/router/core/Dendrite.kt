@@ -32,7 +32,7 @@ class Dendrite {
         val instance: Dendrite by lazy { Holder.instance }
     }
 
-    fun registerRoute(routePath: String,clazz: Class<*>?) {
+    fun <R : Any> registerRoute(routePath: String,clazz: Class<R>) {
         routes[routePath] = clazz
     }
 
@@ -50,25 +50,43 @@ class Dendrite {
 
     fun navigation (context: Context?, clazz: Class<*>?) {
         if (clazz == null) return
-        var intent = Intent(context,clazz)
+        val intent = Intent(context,clazz)
         context?.startActivity(intent)
     }
 
     fun navigation (signal: Signal?) {
         try {
-            var routePath = "${signal?.uri?.scheme}://${signal?.uri?.host}${signal?.uri?.path}"
-            if (TextUtils.isEmpty(routePath)) {
+            val uri = signal?.uri ?: return
+            val actualUrl = "${uri.scheme}://${uri.host}${uri.path}"
+            if (TextUtils.isEmpty(actualUrl)) {
                 throw IllegalStateException("You must register route first.")
             }
-            val clazz = getNavigation(routePath)
+
+            val routeKey = routes.keys.find { key ->
+                actualUrl == key || actualUrl.startsWith("$key/")
+            }
+
+            val clazz = routeKey?.let { routes[it] }
             if (clazz == null) {
-                Log.e(TAG, "Route not found for path: $routePath")
+                Log.e(TAG, "Route not found for path: $actualUrl")
                 Log.e(TAG, "Registered routes: ${routes.keys}")
                 return
             }
-            var intent = Intent(signal?.context, clazz)
-            val data = signal?.queries?.optString("data")
-            intent.putExtra(Constant.SCHEMA_QUERIES_KEY, data)
+            val intent = Intent(signal?.context, clazz)
+
+            // put all variables into intent
+            signal?.variables?.forEach { (key, values) ->
+                values.firstOrNull()?.let { intent.putExtra(key, it) }
+            }
+
+            // put all queries into intent
+            signal?.queries?.forEach { (key, values) ->
+                values.firstOrNull()?.let { intent.putExtra(key, it) }
+            }
+
+            // put all bundle into intent
+            signal?.args?.let { intent.putExtras(it) }
+
             signal?.context?.startActivity(intent)
         } catch (e: Exception) {
             Log.e(TAG, "Navigation failed: ${e.message}", e)

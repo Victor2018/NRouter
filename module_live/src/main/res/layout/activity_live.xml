@@ -9,6 +9,7 @@
     tools:context=".LiveActivity">
 
     <TextView
+        android:id="@+id/mTvQueries"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

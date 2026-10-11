@@ -39,3 +39,27 @@ internal fun String.toPattern(): String {
         .replace(UNPATTERNED_REGEX, "($COMMON_PATTERN)") // variable with no specific regex
         .replace(VARIABLE_ABLE_REGEX, "($3)") // variable with specific regex
 }
+
+fun getQueriesPath (args: HashMap<String,String>): String {
+    val pathSb = StringBuffer()
+    if (args.size == 0) return ""
+    args.forEach {
+        val item = "&${it.key}=${it.value}"
+        pathSb.append(item)
+    }
+    pathSb.replace(0,1,"?")
+
+    return pathSb.toString()
+}
+
+fun getVariablesPath (args: List<String>): String {
+    val pathSb = StringBuffer()
+    if (args.size == 0) return ""
+    args.forEach {
+        ///423099
+        val item = "/$it"
+        pathSb.append(item)
+    }
+
+    return pathSb.toString()
+}

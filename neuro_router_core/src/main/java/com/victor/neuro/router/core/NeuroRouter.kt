@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import com.victor.neuro.router.core.plugin.PluginConfig
@@ -49,7 +50,7 @@ class NeuroRouter {
         }
     }
 
-    fun registerRoute(routeMap: HashMap<String,Class<*>>) {
+    fun <T : Any> registerRoute(routeMap: HashMap<String, Class<T>>) {
         routeMap.forEach {
             addPath(it.key, it.value){
                 Dendrite.instance.navigation(it)
@@ -57,13 +58,13 @@ class NeuroRouter {
         }
     }
 
-    fun registerRoute(expression: String,clazz: Class<*>) {
+    fun <T : Any> registerRoute(expression: String,clazz: Class<T>) {
         addPath(expression, clazz){
             Dendrite.instance.navigation(it)
         }
     }
 
-    fun addPath(expression: String,clazz: Class<*>, action: SignalAction) {
+    fun <T : Any> addPath(expression: String,clazz: Class<T>, action: SignalAction) {
         if (soma == null) {
             setBase(Uri.parse(PluginConfig.ROUTE_BASE_URI))
         }
@@ -96,30 +97,41 @@ class NeuroRouter {
         soma?.let { neuro.connect(it, AxonBranch(expression, action)) }
     }
 
-    fun navigation(url: String, context: Context? = null) {
+    fun navigation(url: String,arg: HashMap<String, String>, context: Context?) {
+        val path = getQueriesPath(arg)
+        val routeUrl = "$url$path"
+        navigation(routeUrl, context)
+    }
+
+    fun navigation(url: String,arg: List<String>, context: Context?) {
+        val path = getVariablesPath(arg)
+        val routeUrl = "$url$path"
+        navigation(routeUrl, context)
+    }
+
+    fun navigation(url: String, context: Context?) {
+        navigation(url,Bundle(),context)
+    }
+
+    fun navigation(url: String,arg: Bundle,context: Context?) {
         var routeUrl = url
         if (!routeUrl.startsWith(PluginConfig.ROUTE_BASE_URI)) {
             routeUrl = "${PluginConfig.ROUTE_BASE_URI}$url"
         }
-        neuro.proceed(0,routeUrl, context)
+        neuro.proceed(0,routeUrl, context,null,arg)
     }
 
-    fun navigation(url: String,queries: String?, context: Context? = null) {
-        var routeUrl = url
-        if (!TextUtils.isEmpty(queries)) {
-            routeUrl = "$url?data=$queries"
-        }
-        navigation(routeUrl, context)
-    }
-
-    fun getNavigation (routePath: String): Any? {
+    inline fun <reified T : Any> getNavigation (routePath: String): T? {
         var routeUrl = routePath
         if (!routeUrl.startsWith(PluginConfig.ROUTE_BASE_URI)) {
             routeUrl = "${PluginConfig.ROUTE_BASE_URI}$routePath"
         }
-        var navigationCls = Dendrite.instance.getNavigation(routeUrl)
-
-        return navigationCls?.newInstance()
+        val navigationCls = Dendrite.instance.getNavigation(routeUrl)
+        return if (navigationCls != null && T::class.java.isAssignableFrom(navigationCls)) {
+            T::class.java.cast(navigationCls.getDeclaredConstructor().newInstance())
+        } else {
+            null
+        }
     }
 
     fun clearPaths() {

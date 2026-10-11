@@ -25,5 +25,15 @@ class LiveActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLiveBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initData()
+    }
+
+    fun initData () {
+        val liveTime = intent.getStringExtra("live_time")
+        val liveContent = intent.getStringExtra("live_content")
+
+        binding.mTvQueries.text = "liveTime = $liveTime \nliveContent = $liveContent"
+
     }
 }

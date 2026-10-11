@@ -16,7 +16,7 @@ import com.victor.neuro.router.annotation.Route
  * -----------------------------------------------------------------
  */
 
-@Route(path = "/message_act")
+@Route(path = "/message_act/<message_id>")
 class MessageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMessageBinding
@@ -24,5 +24,13 @@ class MessageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initData()
+
+    }
+
+    fun initData () {
+        val messageId = intent.getStringExtra("message_id")
+        binding.mTvQueries.text = "message_id:$messageId"
     }
 }

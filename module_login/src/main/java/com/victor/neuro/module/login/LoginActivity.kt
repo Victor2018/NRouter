@@ -32,11 +32,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun initData () {
-        var data = intent.getStringExtra(Constant.SCHEMA_QUERIES_KEY)
+        val userName = intent.getStringExtra("user_name")
+        val password = intent.getStringExtra("password")
 
-        var json = JSONObject(data)
-        var userName = json.optString("user_name")
-        var password = json.optString("password")
         binding.mTvQueries.text = "userName = $userName \npassword = $password"
 
     }

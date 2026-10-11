@@ -3,6 +3,7 @@ package com.victor.neuro.router
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.victor.neuro.module.message.MessageActivity
 import com.victor.neuro.router.core.NeuroRouter
 import com.victor.neuro.router.databinding.ActivityMainBinding
 
@@ -29,8 +30,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.mBtnLogin -> {
                 val routeUrl = "cherry://com.cherry.router/login_act"
-                val data = "{\"user_name\":\"victor\",\"password\": \"423099\"}"
-                NeuroRouter.instance.navigation(routeUrl, data,this)
+//                val routeUrl = "cherry://com.cherry.router/login_act?user_name=victor&password=423099"
+                val map = HashMap<String,String>()
+                map["user_name"] = "victor"
+                map["password"] = "423099"
+                NeuroRouter.instance.navigation(routeUrl,map,this)
             }
             R.id.mBtnHome -> {
                 val routeUrl = "cherry://com.cherry.router/home_act"
@@ -38,7 +42,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.mBtnMessage -> {
                 val routeUrl = "cherry://com.cherry.router/message_act"
-                NeuroRouter.instance.navigation(routeUrl, this)
+//                val routeUrl = "cherry://com.cherry.router/message_act/423099"
+                NeuroRouter.instance.navigation(routeUrl, listOf("423099"), this)
             }
             R.id.mBtnMe -> {
                 val routeUrl = "cherry://com.cherry.router/me_act"
@@ -46,7 +51,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.mBtnLive -> {
                 val routeUrl = "cherry://com.cherry.router/live_act"
-                NeuroRouter.instance.navigation(routeUrl, this)
+                val args = Bundle()
+                args.putString("live_time","2026-10-11 18:08")
+                args.putString("live_content","神经网络路由")
+                NeuroRouter.instance.navigation(routeUrl, args,this)
             }
         }
     }
