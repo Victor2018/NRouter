@@ -3,6 +3,7 @@ package com.victor.neuro.router.core
 import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import com.victor.neuro.router.core.util.Constant
 import java.lang.Exception
 
@@ -59,12 +60,18 @@ class Dendrite {
             if (TextUtils.isEmpty(routePath)) {
                 throw IllegalStateException("You must register route first.")
             }
-            var intent = Intent(signal?.context,getNavigation(routePath))
+            val clazz = getNavigation(routePath)
+            if (clazz == null) {
+                Log.e(TAG, "Route not found for path: $routePath")
+                Log.e(TAG, "Registered routes: ${routes.keys}")
+                return
+            }
+            var intent = Intent(signal?.context, clazz)
             val data = signal?.queries?.optString("data")
-            intent.putExtra(Constant.SCHEMA_QUERIES_KEY,data)
+            intent.putExtra(Constant.SCHEMA_QUERIES_KEY, data)
             signal?.context?.startActivity(intent)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Navigation failed: ${e.message}", e)
         }
 
     }

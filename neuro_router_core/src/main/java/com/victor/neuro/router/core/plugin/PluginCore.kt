@@ -1,8 +1,8 @@
 package com.victor.neuro.router.core.plugin
 
 import android.app.Application
-import android.net.Uri
-import com.victor.neuro.router.core.NeuroRouter
+import android.util.Log
+import java.util.ServiceLoader
 
 /*
  * -----------------------------------------------------------------
@@ -22,6 +22,7 @@ class PluginCore {
 
     companion object {
         val  instance: PluginCore by lazy { Holder.instance }
+        private const val TAG = "PluginCore"
     }
 
     /**
@@ -30,11 +31,37 @@ class PluginCore {
      * @param application
      */
     fun init(application: Application) {
-        //扫描手动注册的路由插件
+        // 1. 优先使用 ServiceLoader 发现 KSP 生成的路由类（更可靠）
+        loadViaServiceLoader()
+        // 2. 扫描手动注册的路由插件（DexFile 方式）
         PluginProxy.initPlugins(application, PluginConfig.PLUGIN_PACKAGE)
-        //扫描注解处理器生成的路由类
+        // 3. 扫描注解处理器生成的路由类（DexFile 方式，作为兆底）
         PluginProxy.initPlugins(application, PluginConfig.GENERATED_PACKAGE)
         this.application = application
+    }
+
+    /**
+     * 通过 ServiceLoader 发现 IRoute 实现类
+     * 依赖 KSP 生成的 META-INF/services/com.victor.neuro.router.core.plugin.IRoute 文件
+     */
+    private fun loadViaServiceLoader() {
+        try {
+            Log.d(TAG, "Loading routes via ServiceLoader...")
+            val serviceLoader = ServiceLoader.load(IRoute::class.java)
+            var count = 0
+            for (route in serviceLoader) {
+                try {
+                    route.register()
+                    count++
+                    Log.d(TAG, "ServiceLoader loaded: ${route.javaClass.name}")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to register route from ServiceLoader: ${route.javaClass.name}", e)
+                }
+            }
+            Log.d(TAG, "ServiceLoader loaded $count route plugins")
+        } catch (e: Exception) {
+            Log.e(TAG, "ServiceLoader discovery failed: ${e.javaClass.simpleName}: ${e.message}")
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     api(project(":neuro_router_core"))
-    kapt(project(":neuro_router_compiler"))
+    ksp(project(":neuro_router_compiler"))
 //    api(libs.nrouter.core)
-//    kapt(libs.nrouter.compiler)
+//    ksp(libs.nrouter.compiler)
 }

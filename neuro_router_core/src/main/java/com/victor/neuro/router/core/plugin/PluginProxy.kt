@@ -54,13 +54,14 @@ object PluginProxy {
      */
     private fun registerRoute(pluginName: String?) {
         try {
+            Log.d(TAG, "Loading route class: $pluginName")
             val temp = Class.forName(pluginName) as Class<IRoute>
             val route = temp.newInstance()
             //注册路由
             route.register()
-            Log.d(TAG, "load plugin $route")
+            Log.d(TAG, "Successfully loaded route: $pluginName")
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Failed to load route class: $pluginName, error: ${e.javaClass.simpleName}: ${e.message}", e)
         }
     }
 

@@ -6,6 +6,21 @@
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/lib_common" />
+            <option value="$PROJECT_DIR$/module_home" />
+            <option value="$PROJECT_DIR$/module_live" />
+            <option value="$PROJECT_DIR$/module_login" />
+            <option value="$PROJECT_DIR$/module_me" />
+            <option value="$PROJECT_DIR$/module_message" />
+            <option value="$PROJECT_DIR$/neuro_router_annotation" />
+            <option value="$PROJECT_DIR$/neuro_router_compiler" />
+            <option value="$PROJECT_DIR$/neuro_router_core" />
+          </set>
+        </option>
         <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>

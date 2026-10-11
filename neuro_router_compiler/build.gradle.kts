@@ -15,6 +15,7 @@ kotlin {
 
 dependencies {
     implementation(project(":neuro_router_annotation"))
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.13")
 }
 
 afterEvaluate {
