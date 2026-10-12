@@ -37,10 +37,10 @@ NRouter：   URL输入 → Nucleus匹配 → Soma决策 → AxonBranch执行 →
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                      业务模块层                              │
-│  HomeRoute  LoginRoute  MeRoute  MessageRoute  LiveRoute    │
-│              (实现 IRoute 接口，注册路由路径)                  │
+│  HomeActivity  LoginActivity  MeActivity  MessageActivity   │
+│              (使用 @Route 注解标注路由路径)                    │
 └────────────────────┬────────────────────────────────────────┘
-                     │ register()
+                     │ KSP 编译期处理 @Route
 ┌────────────────────▼────────────────────────────────────────┐
 │                    路由核心层                                 │
 │                                                              │
@@ -57,10 +57,10 @@ NRouter：   URL输入 → Nucleus匹配 → Soma决策 → AxonBranch执行 →
 │              └─► startActivity()                             │
 └──────────────────────────────────────────────────────────────┘
                      ▲
-                     │ 扫描发现
+                     │ ServiceLoader 发现
 ┌────────────────────┴────────────────────────────────────────┐
-│                   插件发现层                                  │
-│  PluginCore → PluginProxy → ClassUtils (dex扫描)            │
+│                   编译期代码生成                               │
+│  KSP RouteProcessor → 生成 RouteLoader + META-INF/services  │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -69,25 +69,31 @@ NRouter：   URL输入 → Nucleus匹配 → Soma决策 → AxonBranch执行 →
 ### 一、路由注册流程
 
 ```
+编译期（KSP 注解处理）
+    │
+    ▼
+RouteProcessor 扫描所有 @Route 注解
+    │
+    ▼
+为每个模块生成 RouteLoader 类（实现 IRoute 接口）
+    │
+    ▼
+同时生成 META-INF/services 服务配置文件
+    │
+    ▼
+运行期
+    │
+    ▼
 Application.onCreate()
     │
     ▼
 NeuroRouter.instance.init(application)
     │
     ▼
-PluginCore.init(application)
+ServiceLoader 发现所有模块的 RouteLoader
     │
     ▼
-PluginProxy.initPlugins() ──► ClassUtils 扫描 dex 文件
-    │
-    ▼
-发现 com.victor.module.route 包下所有 IRoute 实现类
-    │
-    ▼
-反射实例化并调用 register() 方法
-    │
-    ▼
-各业务模块注册路由路径
+调用 register() 方法自动注册路由路径
     │
     ▼
 Neuro.connect() 建立神经元连接
@@ -96,7 +102,10 @@ Neuro.connect() 建立神经元连接
 ### 二、路由匹配流程
 
 ```
-NeuroRouter.navigation("cherry://com.cherry.router/home_act")
+NeuroRouter.navigation("/home_act", context)
+    │
+    ▼
+自动补全为 cherry://com.cherry.router/home_act
     │
     ▼
 Neuro.proceed() ──► findRoute(url)
@@ -162,7 +171,7 @@ allprojects {
 ```groovy
 dependencies {
     implementation 'com.github.Victor2018.NRouter:neuro_router_core:latestVersion'
-    kapt 'com.github.Victor2018.NRouter:neuro_router_compiler:latestVersion'
+    ksp 'com.github.Victor2018.NRouter:neuro_router_compiler:latestVersion'
 }
 ```
 
@@ -181,37 +190,81 @@ class App : Application() {
 
 ### 4. 注册路由
 
-在各业务模块的 `com.victor.module.route` 包下实现 `IRoute` 接口：
+在业务模块的 Activity 类上添加 `@Route` 注解即可，KSP 会在编译期自动生成路由注册代码：
 
 ```kotlin
-class HomeRoute : IRoute {
-    override fun register() {
-        NeuroRouter.instance.registerRoute("/home_act", HomeActivity::class.java)
-    }
+// 默认 exported = true，对外暴露，可被其他模块跳转
+@Route(path = "/home_act")
+class HomeActivity : AppCompatActivity() {
+    // ...
+}
+
+// exported = false，仅模块内部使用，不会注册到路由表
+@Route(path = "/internal_detail", exported = false)
+class InternalDetailActivity : AppCompatActivity() {
+    // ...
 }
 ```
 
+> `exported` 参数默认为 `true`。设置为 `false` 时，该路由不会被自动注册，适用于仅模块内部使用的页面。
+
 ### 5. 页面跳转
 
-```kotlin
-// 无参跳转
-NeuroRouter.instance.navigation("cherry://com.cherry.router/home_act")
+框架内置 scheme 为 `cherry`，base URI 为 `cherry://com.cherry.router`，导航时会自动补全：
 
-// 带参数跳转
-val jsonData = """{"userId": 123, "userName": "Victor"}"""
-NeuroRouter.instance.navigation("cherry://com.cherry.router/home_act", jsonData)
+```kotlin
+// 无参跳转（直接传路径即可，框架自动补全 base URI）
+NeuroRouter.instance.navigation("/home_act", this)
+
+// 等价于完整 URL 写法
+NeuroRouter.instance.navigation("cherry://com.cherry.router/home_act", this)
+
+// 带 HashMap 参数跳转
+val map = HashMap<String, String>()
+map["user_name"] = "victor"
+map["password"] = "423099"
+NeuroRouter.instance.navigation("/login_act", map, this)
+
+// 带 List 路径变量跳转
+NeuroRouter.instance.navigation("/message_act", listOf("423099"), this)
+
+// 带 Bundle 参数跳转
+val args = Bundle()
+args.putString("live_time", "2026-10-11 18:08")
+NeuroRouter.instance.navigation("/live_act", args, this)
 ```
 
 ### 6. 接收参数
 
-在目标 Activity 中解析参数：
+在目标 Activity 中直接通过 `intent.getStringExtra()` 按键名获取参数：
 
 ```kotlin
-class HomeActivity : AppCompatActivity() {
+// HashMap 参数接收
+@Route(path = "/login_act")
+class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val data = intent.getStringExtra(Constant.SCHEMA_QUERIES_KEY)
-        // 解析 JSON 数据
+        val userName = intent.getStringExtra("user_name")
+        val password = intent.getStringExtra("password")
+    }
+}
+
+// 路径变量接收
+@Route(path = "/message_act/<message_id>")
+class MessageActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val messageId = intent.getStringExtra("message_id")
+    }
+}
+
+// Bundle 参数接收
+@Route(path = "/live_act")
+class LiveActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val liveTime = intent.getStringExtra("live_time")
+        val liveContent = intent.getStringExtra("live_content")
     }
 }
 ```
@@ -224,19 +277,34 @@ class HomeActivity : AppCompatActivity() {
 
 ```kotlin
 // 匹配 /user/123，提取 userId = 123
-NeuroRouter.instance.registerRoute("/user/<userId>", UserActivity::class.java)
+@Route(path = "/user/<userId>")
+class UserActivity : AppCompatActivity()
 
 // 匹配 /article/2024/01，提取 year = 2024, month = 01
-NeuroRouter.instance.registerRoute("/article/<year:\\d+>/<month:\\d+>", ArticleActivity::class.java)
+@Route(path = "/article/<year:\\d+>/<month:\\d+>")
+class ArticleActivity : AppCompatActivity()
 ```
 
-### 2. Soma 胞体处理
+### 2. 路由导出控制
+
+通过 `exported` 参数控制路由是否对外暴露：
+
+```kotlin
+// 对外暴露（默认），其他模块可通过路由跳转
+@Route(path = "/public_page")
+class PublicActivity : AppCompatActivity()
+
+// 不对外暴露，仅模块内部使用，不会注册到全局路由表
+@Route(path = "/private_page", exported = false)
+class PrivateActivity : AppCompatActivity()
+```
+
+### 3. Soma 胞体处理
 
 通过继承 `Soma` 类，可以实现自定义的路由拦截逻辑：
 
 ```kotlin
 class CustomSoma : Soma("custom") {
-    override val schemes = listOf("cherry")
     override val hosts = listOf("com.cherry.router")
     
     override fun onSomaProcess(signal: Signal): Boolean {
@@ -255,7 +323,7 @@ class CustomSoma : Soma("custom") {
 }
 ```
 
-### 3. SomaFallback 兜底处理
+### 4. SomaFallback 兜底处理
 
 用于处理未匹配到任何路由的情况：
 
@@ -272,6 +340,8 @@ class FallbackHandler : SomaFallback() {
 ```
 NRouter/
 ├── app/                      # 主应用壳
+├── neuro_router_annotation/  # 路由注解定义
+├── neuro_router_compiler/    # KSP 注解处理器
 ├── neuro_router_core/        # 路由核心库
 │   ├── core/
 │   │   ├── Neuro.kt          # 路由引擎
@@ -281,7 +351,7 @@ NRouter/
 │   │   ├── AxonBranch.kt     # 轴突分支
 │   │   ├── Dendrite.kt       # 树突
 │   │   ├── Signal.kt         # 信号
-│   │   └── plugin/           # 插件发现机制
+│   │   └── plugin/           # 插件发现机制（ServiceLoader）
 │   └── data/                 # 数据类
 ├── module_home/              # 首页模块
 ├── module_login/             # 登录模块
@@ -294,7 +364,7 @@ NRouter/
 ## 🎯 设计亮点
 
 1. **🧬 生物隐喻**：用神经元结构类比路由系统，Soma 负责决策、AxonBranch 负责路径传导、Dendrite 负责接收并执行跳转
-2. **📦 模块解耦**：业务模块只需实现 `IRoute` 接口放在约定包路径下，框架自动扫描发现，无需硬编码依赖
+2. **📦 模块解耦**：业务模块只需在 Activity 上添加 `@Route` 注解，KSP 编译期自动生成注册代码，ServiceLoader 运行时自动发现，无需硬编码依赖
 3. **🔍 高效匹配**：路径按段数分层索引 + 优先级排序，精确匹配优先，通配符兜底
 4. **🔌 可扩展**：支持 `SomaFallback` 兜底处理、`AxonPreprocessor` 前置拦截、变量提取等高级特性
 5. **🔒 线程安全**：核心数据结构使用 `ConcurrentSkipListMap` / `ConcurrentSkipListSet`，保证并发安全
@@ -303,13 +373,14 @@ NRouter/
 
 - **开发语言**：Kotlin 1.9.0
 - **构建工具**：Android Gradle Plugin 8.5.0
+- **注解处理**：KSP 1.9.0-1.0.13
 - **最低支持版本**：API 24+
 - **依赖管理**：JitPack
 
 ## 🔗 最佳实践
 
 NRouter 神经网络路由实现组件化最佳实践：
-https://github.com/Victor2018/Cherry
+https://github.com/Victor2018/Playlet
 
 ## 📝 更新日志
 

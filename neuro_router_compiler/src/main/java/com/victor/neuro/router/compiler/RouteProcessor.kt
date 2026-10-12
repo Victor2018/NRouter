@@ -42,6 +42,12 @@ class RouteProcessor(
                 .find { it.name?.asString() == "path" }
                 ?.value as? String ?: continue
 
+            val exported = routeAnnotation.arguments
+                .find { it.name?.asString() == "exported" }
+                ?.value as? Boolean ?: true
+
+            if (!exported) continue
+
             val className = symbol.qualifiedName?.asString() ?: continue
 
             if (routeMap.containsKey(path)) {

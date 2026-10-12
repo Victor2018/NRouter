@@ -13,4 +13,7 @@ package com.victor.neuro.router.annotation
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
-annotation class Route(val path: String)
+annotation class Route(
+    val path: String,
+    val exported: Boolean = true
+)
